@@ -24,9 +24,14 @@ echo 'LongAmp-seq analysis' > log.txt
 
 for file in *R1_001.fastq
 do
-  flash -M600 ${file} ${file/R1/R2} # read length = 300 so we use 300*2 as maximum merged read length
+  flash -M600 ${file} ${file/R1/R2} 2>&1 | tee flash.log # read length = 300 so we use 300*2 as maximum merged read length 
   mv ./out.extendedFrags.fastq ${file/.fastq/_merged.fastq}
 done
+
+echo "The total pairs found by FLASH" >> log.txt
+grep "Total pairs:" flash.log | awk '{print $4}' >> log.txt
+echo "The combined pairs done by FLASH" >> log.txt
+grep "Combined pairs:" flash.log | awk '{print $4}' >> log.txt
 
 for file in *merged.fastq
 do
@@ -60,6 +65,7 @@ do
   samtools view -F 4 ${file/.fastq/30_filtered.bam} | cut -f1 | uniq -d > ${file/.fastq/filtered_2+alignID.txt}
   samtools view -F 4 ${file/.fastq/30_filtered.bam} | cut -f1 | uniq -u > ${file/.fastq/filtered_1alignID.txt}
   seqtk subseq ${file/.fastq/30_filtered.fastq} ${file/.fastq/filtered_2+alignID.txt} > ${file/.fastq/30_filtered_2+.fastq}
+  seqtk seq -a ${file/.fastq/30_filtered_2+.fastq} > ${file/.fastq/30_filtered_2+.fasta}
   seqtk subseq ${file/.fastq/30_filtered.fastq} ${file/.fastq/filtered_1alignID.txt} > ${file/.fastq/30_filtered_1.fastq}
 
   bwa mem -A2 -E1 ${ref_genome} ${file/.fastq/30_filtered_2+.fastq} >${file/.fastq/filtered_2+.sam}
@@ -71,6 +77,7 @@ do
 
   amp_length=$((pcr_end-pcr_start))
   python bedfile.py ${file/.fastq/filtered_2+.csv} ${file/.fastq/largedel_output.csv} ${file/.fastq/largedel_group.csv} ${amp_length}
+  python add_seq.py ${file/.fastq/largedel_output.csv} ${file/.fastq/30_filtered_2+.fasta} 
 
   # delly variant calling
   # update 11/11/2020
@@ -97,6 +104,7 @@ do
   mv ${file} ${file/merged.fastq/longamp}/raw_data/
 
   mv ${file/.fastq/30_filtered_2+.fastq} ${file/merged.fastq/longamp}/output
+  mv ${file/.fastq/30_filtered_2+.fasta} ${file/merged.fastq/longamp}/output
   mv ${file/.fastq/30_filtered_1.fastq} ${file/merged.fastq/longamp}/output
   mv ${file/.fastq/filtered_2+.csv} ${file/merged.fastq/longamp}/output
   mv ${file/.fastq/largedel_output.csv} ${file/merged.fastq/longamp}/output
