@@ -79,13 +79,16 @@ do
   python bedfile.py ${file/.fastq/filtered_2+.csv} ${file/.fastq/largedel_output.csv} ${file/.fastq/largedel_group.csv} ${amp_length}
   python add_seq.py ${file/.fastq/largedel_output.csv} ${file/.fastq/30_filtered_2+.fasta} 
 
+  # clustering
+  python3 clustering_LAS.py ${file/.fastq/largedel_output.csv} > ${file/.fastq/largedel_output_cluster.csv}
+
   # delly variant calling
   # update 11/11/2020
   bash longamp_delly_calling.sh ${ref_genome}
 
   # visualization
+  python3 distribution_LAS.py ${file/.fastq/largedel_output_cluster.csv} cut_site_left
   python longampfigures_distribution.py ${file/.fastq/30_filteredsorted.csv}
-
 
   # append read numbers into the log file.
   # total aligned events:
@@ -113,5 +116,7 @@ do
   mv ${file/.fastq/30_filteredsorted.svg} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.svg}
 
   mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing
+
+  
 
 done
