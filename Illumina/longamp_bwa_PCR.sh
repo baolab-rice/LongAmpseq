@@ -81,14 +81,18 @@ do
 
   # clustering
   python3 clustering_LAS.py ${file/.fastq/largedel_output.csv} > ${file/.fastq/largedel_output_cluster.csv}
+  ## filter cluster size 1
+  touch ${file/.fastq/largedel_output_cluster_t.csv}
+  awk '{if ($1>1) print}' ${file/.fastq/largedel_output_cluster.csv} > ${file/.fastq/largedel_output_cluster_t.csv}
+  mv ${file/.fastq/largedel_output_cluster_t.csv} ${file/.fastq/largedel_output_cluster.csv} 
 
   # delly variant calling
   # update 11/11/2020
-  bash longamp_delly_calling.sh ${ref_genome}
+  #bash longamp_delly_calling.sh ${ref_genome}
 
   # visualization
-  python3 distribution_LAS.py ${file/.fastq/largedel_output_cluster.csv} cut_site_left
-  python longampfigures_distribution.py ${file/.fastq/30_filteredsorted.csv}
+  python3 distribution_LAS.py ${file/.fastq/largedel_output_cluster.csv} ${cut_site_left}
+  #python longampfigures_distribution.py ${file/.fastq/30_filteredsorted.csv}
 
   # append read numbers into the log file.
   # total aligned events:
@@ -112,10 +116,14 @@ do
   mv ${file/.fastq/filtered_2+.csv} ${file/merged.fastq/longamp}/output
   mv ${file/.fastq/largedel_output.csv} ${file/merged.fastq/longamp}/output
   mv ${file/.fastq/largedel_group.csv} ${file/merged.fastq/longamp}/output
-  mv ${file/.fastq/30_filteredsorted.csv} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.csv}
-  mv ${file/.fastq/30_filteredsorted.svg} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.svg}
-
-  mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing
+  #mv ${file/.fastq/30_filteredsorted.csv} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.csv}
+  #mv ${file/.fastq/30_filteredsorted.svg} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.svg}
+  mv ${file/.fastq/largedel_output_cluster.csv} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.csv}
+  mv ${file/.fastq/largedel_output_cluster.svg} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.svg}    
+  
+  if [ -f *${file/merged.fastq/}* ]; then
+      mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing
+  fi
 
   
 
