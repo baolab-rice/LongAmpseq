@@ -16,9 +16,9 @@ ref_genome=${6:-/home/yp11/Desktop/genomes/hg19/hg19.fa}
 # removed the duplication deduct part
 
 # Yidan Pan @Baolab
+# Ming Cao @Baolab
 ##########################
-  # update 11/11/2020
-  # reference genome update in delly_calling.sh
+  # update 06/16/2022
 
 echo 'LongAmp-seq analysis' > log.txt
 
@@ -81,19 +81,15 @@ do
 
   # clustering
   python3 clustering_LAS.py ${file/.fastq/largedel_output.csv} > ${file/.fastq/largedel_output_cluster.csv}
-  ## filter cluster size 1
+  ## filter cluster size (change to cluster size <0.1% read)
+  cluster_size=$(awk '{SUM+=$1} END{print SUM}' ${file/.fastq/largedel_output_cluster.csv} | xargs -I {} echo {}*0.001 | bc)
   touch ${file/.fastq/largedel_output_cluster_t.csv}
-  awk '{if ($1>1) print}' ${file/.fastq/largedel_output_cluster.csv} > ${file/.fastq/largedel_output_cluster_t.csv}
-  mv ${file/.fastq/largedel_output_cluster_t.csv} ${file/.fastq/largedel_output_cluster.csv} 
-
-  # delly variant calling
-  # update 11/11/2020
-  #bash longamp_delly_calling.sh ${ref_genome}
+  awk -v cluster=$cluster_size '{if ($1>cluster) print}' ${file/.fastq/largedel_output_cluster.csv} > ${file/.fastq/largedel_output_cluster_t.csv}
+  cp ${file/.fastq/largedel_output_cluster_t.csv} ${file/.fastq/largedel_output_cluster.csv} 
 
   # visualization
   python3 distribution_LAS.py ${file/.fastq/largedel_output_cluster.csv} ${cut_site_left}
-  #python longampfigures_distribution.py ${file/.fastq/30_filteredsorted.csv}
-
+  sleep 2
   # append read numbers into the log file.
   # total aligned events:
   echo 'Total aligned read number after filtering:' >> log.txt
@@ -121,10 +117,10 @@ do
   mv ${file/.fastq/largedel_output_cluster.csv} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.csv}
   mv ${file/.fastq/largedel_output_cluster.svg} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.svg}    
   
-  if [ -f *${file/merged.fastq/}* ]; then
-      mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing
-  fi
+  mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing 2>/dev/null
+  mv log.txt ${file/merged.fastq/longamp}/output/${file/.fastq/_log.txt}
+  mv flash.log ${file/merged.fastq/longamp}/output
 
-  
+
 
 done
