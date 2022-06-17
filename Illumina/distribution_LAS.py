@@ -9,7 +9,7 @@ import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def red_blue_profile_pretty(df, cutsite, output_svg,linewidth,direction):
+def red_blue_profile_pretty(df, cutsite, output_svg,linewidth,direct):
     df['start'] = df['start'].astype(float)
     df['length'] = df['length'].astype(float)
 
@@ -34,15 +34,18 @@ def red_blue_profile_pretty(df, cutsite, output_svg,linewidth,direction):
     for row in df.itertuples():
         mid = row.start + 0.5 * row.length
         end = row.start + row.length
-            if direction == '-':
-                row.start = temp1
-                end = temp2
-                row.start = -temp2
-                end = -temp1
-        if mid < 0:
-            plt.hlines(i, row.start, end, lw=linewidth, colors="red")
+        if direct == '-':
+            temp1 = row.start
+            temp2 = end
+            nstart = temp2 * -1
+            nend = temp1 * -1
         else:
-            plt.hlines(i, row.start, end, lw=linewidth, colors="blue")
+            nstart = row.start
+            nend = end
+        if mid < 0:
+            plt.hlines(i,nstart,nend, lw=linewidth, colors="red")
+        else:
+            plt.hlines(i,nstart,nend, lw=linewidth, colors="blue")
         i = i+1
 
     plt.xlabel("Relative position of large deletions")
@@ -57,10 +60,10 @@ def read_LD(filename):
     with open(filename,'r') as f:
         next(f)
         for line in f:
-            nline = line.split(',')
-            ld_list.append([nline[1], int(nline[1]) + int(nline[2]), nline[2]])
+            nline = line.split('\t')
+            ld_list.append([nline[1], int(nline[2])-int(nline[1])])
         f.close()
-    df = pd.DataFrame(ld_list, columns=['start', 'end', 'length'])
+    df = pd.DataFrame(ld_list, columns=['start', 'length'])
 
     return df
 
@@ -77,15 +80,13 @@ def main():
 
     df_group1 = read_LD(sys.argv[1])
 
-    output_svg = sys.argv[1].replace(".txt", ".svg")
+    output_svg = sys.argv[1].replace(".csv", ".svg")
 
     cutsite = int(sys.argv[2])
 
-    direction = sys.argv[3]
+    direct = sys.argv[3]
 
-    red_blue_profile_pretty(df_group1, cutsite, output_svg, 2,direction)
-
-    
+    red_blue_profile_pretty(df_group1, cutsite, output_svg, 2,direct)
 
 if __name__ == '__main__':
     main()
