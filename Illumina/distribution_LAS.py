@@ -9,7 +9,7 @@ import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def red_blue_profile_pretty(df, cutsite, output_svg,linewidth):
+def red_blue_profile_pretty(df, cutsite, output_svg,linewidth,direction):
     df['start'] = df['start'].astype(float)
     df['length'] = df['length'].astype(float)
 
@@ -34,6 +34,11 @@ def red_blue_profile_pretty(df, cutsite, output_svg,linewidth):
     for row in df.itertuples():
         mid = row.start + 0.5 * row.length
         end = row.start + row.length
+            if direction == '-':
+                row.start = temp1
+                end = temp2
+                row.start = -temp2
+                end = -temp1
         if mid < 0:
             plt.hlines(i, row.start, end, lw=linewidth, colors="red")
         else:
@@ -52,10 +57,10 @@ def read_LD(filename):
     with open(filename,'r') as f:
         next(f)
         for line in f:
-            nline = line.split('\t')
-            ld_list.append([nline[1], int(nline[2])-int(nline[1])])
+            nline = line.split(',')
+            ld_list.append([nline[1], int(nline[1]) + int(nline[2]), nline[2]])
         f.close()
-    df = pd.DataFrame(ld_list, columns=['start', 'length'])
+    df = pd.DataFrame(ld_list, columns=['start', 'end', 'length'])
 
     return df
 
@@ -72,11 +77,15 @@ def main():
 
     df_group1 = read_LD(sys.argv[1])
 
-    output_svg = sys.argv[1].replace(".csv", ".svg")
+    output_svg = sys.argv[1].replace(".txt", ".svg")
 
     cutsite = int(sys.argv[2])
 
-    red_blue_profile_pretty(df_group1, cutsite, output_svg, 2)
+    direction = sys.argv[3]
+
+    red_blue_profile_pretty(df_group1, cutsite, output_svg, 2,direction)
+
+    
 
 if __name__ == '__main__':
     main()
