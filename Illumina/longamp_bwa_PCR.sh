@@ -82,9 +82,12 @@ do
   # clustering
   python3 clustering_LAS.py ${file/.fastq/largedel_output.csv} > ${file/.fastq/largedel_output_cluster.csv}
   ## filter cluster size (change to cluster size <0.1% read)
-  cluster_size=$(awk '{SUM+=$1} END{print SUM}' ${file/.fastq/largedel_output_cluster.csv} | xargs -I {} echo {}*0.0001 | bc)
+  #cluster_size=$(awk '{SUM+=$1} END{print SUM}' ${file/.fastq/largedel_output_cluster.csv} | xargs -I {} echo {}*0.001 | bc)
+  ## filter with aligned read number
+  read_num=$(echo $(cat ${file/.fastq/30_filtered.fastq}|wc -l)/4|bc)
+  read_size=$(echo $read_num*0.0001 | bc)
   touch ${file/.fastq/largedel_output_cluster_t.csv}
-  awk -v cluster=$cluster_size '{if ($1>cluster) print}' ${file/.fastq/largedel_output_cluster.csv} > ${file/.fastq/largedel_output_cluster_t.csv}
+  awk -v cluster=$read_size '{if ($1>cluster) print}' ${file/.fastq/largedel_output_cluster.csv} > ${file/.fastq/largedel_output_cluster_t.csv}
   cp ${file/.fastq/largedel_output_cluster_t.csv} ${file/.fastq/largedel_output_cluster.csv} 
 
   # visualization
