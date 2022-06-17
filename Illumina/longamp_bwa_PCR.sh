@@ -6,7 +6,7 @@ cut_site_left=${3:-5248229}
 cut_site_right=${4:-5248230}
 pcr_end=${5:-5250918}
 ref_genome=${6:-/home/yp11/Desktop/genomes/hg19/hg19.fa}
-direction=${7:+}
+direction=${7:-+}
 ##########################
 # put the script in the same directory as demultiplexed fastq files.
 
