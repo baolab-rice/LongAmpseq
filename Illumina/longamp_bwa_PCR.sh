@@ -6,6 +6,7 @@ cut_site_left=${3:-5248229}
 cut_site_right=${4:-5248230}
 pcr_end=${5:-5250918}
 ref_genome=${6:-/home/yp11/Desktop/genomes/hg19/hg19.fa}
+direction=${7:+}
 ##########################
 # put the script in the same directory as demultiplexed fastq files.
 
@@ -91,7 +92,7 @@ do
   cp ${file/.fastq/largedel_output_cluster_t.csv} ${file/.fastq/largedel_output_cluster.csv} 
 
   # visualization
-  python3 distribution_LAS.py ${file/.fastq/largedel_output_cluster.csv} ${cut_site_left}
+  python3 distribution_LAS.py ${file/.fastq/largedel_output_cluster.csv} ${cut_site_left} ${direction}
   sleep 2
   # append read numbers into the log file.
   # total aligned events:
