@@ -19,7 +19,7 @@ direction=${7:-+}
 # Yidan Pan @Baolab
 # Ming Cao @Baolab
 ##########################
-  # update 06/16/2022
+  # update 06/20/2022
 
 echo 'LongAmp-seq analysis' > log.txt
 
@@ -94,6 +94,14 @@ do
   # visualization
   python3 distribution_LAS.py ${file/.fastq/largedel_output_cluster.csv} ${cut_site_left} ${direction}
   sleep 2
+
+  # large insertion calling
+  filename=${file/.fastq/.sam}
+  grep -v '^@' ${filename} | awk -v num1=${pcr_start} -v num2=${pcr_end} '{if ($1 ~ /^@/ && $3!="chr11" || $4<num1 || $4>num2) print}' > ${filename/.sam/_LI.sam}
+  echo -e "ReadID\tChr\tStart" > ${filename/.sam/_hit.txt}
+  awk -v OFS='\t' '{if ($3!="*") print $1"\t"$3"\t"$4}' ${filename/.sam/_LI.sam} | sort -n -k3 | sort -V -k2 | awk '!seen[$3]++' >> ${filename/.sam/_hit.txt}
+  python3 ./LI_calling_LAS.py ${filename/.sam/_hit.txt}
+
   # append read numbers into the log file.
   # total aligned events:
   echo 'Total aligned read number after filtering:' >> log.txt
@@ -119,12 +127,12 @@ do
   #mv ${file/.fastq/30_filteredsorted.csv} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.csv}
   #mv ${file/.fastq/30_filteredsorted.svg} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.svg}
   mv ${file/.fastq/largedel_output_cluster.csv} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.csv}
-  mv ${file/.fastq/largedel_output_cluster.svg} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.svg}    
+  mv ${file/.fastq/largedel_output_cluster.svg} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.svg}
+  mv ${filename/.sam/_hit.txt} ${file/merged.fastq/longamp}/output
   
   mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing 2>/dev/null
   mv log.txt ${file/merged.fastq/longamp}/output/${file/.fastq/_log.txt}
   mv flash.log ${file/merged.fastq/longamp}/output
-
 
 
 done
