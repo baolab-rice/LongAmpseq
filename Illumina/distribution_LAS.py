@@ -31,6 +31,11 @@ def red_blue_profile_pretty(df, cutsite, output_svg,linewidth,direct):
     plt.gca().spines['right'].set_visible(False)
     plt.gca().spines['left'].set_visible(False)
 
+    left = 0
+    right = 0
+    total = len(list(df.itertuples()))
+    sim = 0
+
     for row in df.itertuples():
         mid = row.start + 0.5 * row.length
         end = row.start + row.length
@@ -39,17 +44,39 @@ def red_blue_profile_pretty(df, cutsite, output_svg,linewidth,direct):
             temp2 = end
             nstart = temp2 * -1
             nend = temp1 * -1
+            mid = mid * -1
         else:
             nstart = row.start
             nend = end
         if mid < 0:
             plt.hlines(i,nstart,nend, lw=linewidth, colors="red")
+            left += 1
         else:
             plt.hlines(i,nstart,nend, lw=linewidth, colors="blue")
+            right += 1
         i = i+1
+        
+    left_freq = str(left/total * 100)
+    left_freq = left_freq.split('.')[0] + '.' + left_freq.split('.')[1][:2] + '%'
+    right_freq = str(right/total * 100)
+    right_freq = right_freq.split('.')[0] + '.' + right_freq.split('.')[1][:2] + '%'
+    sim_rate = str(sim/total * 100)
+    sim_rate = sim_rate.split('.')[0] + '.' + sim_rate.split('.')[1][:2] + '%'
 
     plt.xlabel("Relative position of large deletions")
     plt.xlim(-3000, 3000) # everthing except for HBG
+
+    plt.text(-1500, 25, left_freq,
+        verticalalignment='top', horizontalalignment='right',
+        color='red', fontsize=20)
+
+    plt.text(1500, 25, right_freq,
+        verticalalignment='top', horizontalalignment='left',
+        color='blue', fontsize=20)
+
+    plt.text(1500, 5, "Sym:{}".format(sim_rate),
+        verticalalignment='top', horizontalalignment='left',
+        color='black', fontsize=15)
 
     plt.savefig(output_svg, bbox_inches='tight', format='svg')
     plt.clf()
