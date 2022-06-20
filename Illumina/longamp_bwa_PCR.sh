@@ -128,7 +128,7 @@ do
   #mv ${file/.fastq/30_filteredsorted.svg} ${file/merged.fastq/longamp}/output/${file/merged.fastq/_delly.svg}
   mv ${file/.fastq/largedel_output_cluster.csv} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.csv}
   mv ${file/.fastq/largedel_output_cluster.svg} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.svg}
-  mv ${filename/.sam/_hit.txt} ${file/merged.fastq/longamp}/output
+  mv ${filename/.sam/_hit_binned.txt} ${file/merged.fastq/longamp}/output
   
   mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing 2>/dev/null
   mv log.txt ${file/merged.fastq/longamp}/output/${file/.fastq/_log.txt}
