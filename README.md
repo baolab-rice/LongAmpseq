@@ -2,8 +2,7 @@
 The analysis for "CRISPR/Cas9 gene-editing of HSPCs from SCD patients has unintended consequences". 
 The pipeline for illumina based large deletion profiling (LongAmp-seq) and Nano-pore based long-read analysis are stored in the following folders:  
 
--update 11/12/2020  
-Switched delly version from delly_v0.8.1_linux_x86_64bit to delly_v0.8.5_linux_x86_64bit
+-update 7/06/2022  
 
 ## Repository structure
 **Folder: Illumina**  
@@ -87,8 +86,6 @@ filtered_1.fastq: the collection of filtered full-length reads that will NOT spl
 largedel_output.csv: all the read IDs containing large deletions
 largedel_group.csv: large deletion patterns grouped by their start positions and lengths.bash longamp_bwa_cellline.sh GFPBFP 1 1004 1005 9423 GFPBFP_9423bp_NEW_ref_cutsite_1004bp.fa
 
-delly.csv: structural variants called by delly
-delly.svg: visualization of delly output
 ```
 
 + Large deletion Profile generating  
@@ -109,13 +106,6 @@ After running bedfile.py commands you should be able to generate two csv files:
 largedel_output.csv: all the read IDs containing large deletions
 largedel_group.csv: large deletion patterns grouped by their start positions and lengths.
 
-
-+ Variant calling using delly
-
-The raw data processing section will call the correlated script and run it for you. 
-For processing this step by yourselves, 
-users should first put the files end with filteredsorted.bam in the Illumina folder,
-and run the command as below:
 
 ```
 # This command will process all the filtered and sorted bam files in the same directory.
