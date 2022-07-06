@@ -133,4 +133,4 @@ python longampfigures_distribution.py [the largedel_output.csv file] chr11 52482
 
 ---------------------------------------
 
-Please contact Yidan Pan (yidan.pan@rice.edu) if you have any questions.
+Please contact Yidan Pan (yidan.pan@rice.edu) and Mingming Cao (mc131@rice.edu) if you have any questions.
