@@ -17,9 +17,6 @@ Processing read splitting patterns output from bash scripts and provide large de
 Performing delly variant calling.
 + longampfigures_distribution.py  
 Data visualizations.
-+ delly  
-The statistical version of delly. 
-Please refer to the original github page for further details: https://github.com/dellytools/delly
 
   
 **Folder: Nanopore**    
