@@ -1,10 +1,12 @@
-# NOTICE: We are updating this description, there might be some difference between the program and the text. Will fix this soon. (02/07/2023)
 
 # LongAmpseq
 The analysis for "CRISPR/Cas9 gene-editing of HSPCs from SCD patients has unintended consequences". 
 The pipeline for illumina based large deletion profiling (LongAmp-seq) and Nano-pore based long-read analysis are stored in the following folders:  
 
 -update 7/06/2022  
+
+## NOTICE: We are updating this description, there might be some difference between the program and the text. Will fix this soon. (02/07/2023)
+
 
 ## Repository structure
 **Folder: Illumina**  
