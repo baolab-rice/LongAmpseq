@@ -1,3 +1,5 @@
+# NOTICE: We are updating this description, there might be some difference between the program and the text. Will fix this soon. (02/07/2023)
+
 # LongAmpseq
 The analysis for "CRISPR/Cas9 gene-editing of HSPCs from SCD patients has unintended consequences". 
 The pipeline for illumina based large deletion profiling (LongAmp-seq) and Nano-pore based long-read analysis are stored in the following folders:  
@@ -6,17 +8,6 @@ The pipeline for illumina based large deletion profiling (LongAmp-seq) and Nano-
 
 ## Repository structure
 **Folder: Illumina**  
-The scripts for processing LongAmp-seq data.  
-+ longamp_bwa_PCR.sh  
-Processing raw Illumina data for PCR based library and provide read splitting patterns for grouping and visualization.
-+ longamp_bwa_cellline.sh  
-Processing raw Illumina data for the reporter cell line and provide read splitting patterns for grouping and visualization.
-+ bedfile.py  
-Processing read splitting patterns output from bash scripts and provide large deletion patterns and frequency analysis  
-+ longamp_delly_calling.sh  
-Performing delly variant calling.
-+ longampfigures_distribution.py  
-Data visualizations.
 
   
 **Folder: Nanopore**    
