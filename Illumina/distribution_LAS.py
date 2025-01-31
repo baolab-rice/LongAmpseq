@@ -9,7 +9,7 @@ import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def red_blue_profile_pretty(df, cutsite, output_svg,linewidth):
+def red_blue_profile_pretty(df, cutsite, output_svg,linewidth, direct):
     df['start'] = df['start'].astype(float)
     df['length'] = df['length'].astype(float)
 
