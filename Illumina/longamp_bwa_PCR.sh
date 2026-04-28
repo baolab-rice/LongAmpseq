@@ -130,7 +130,10 @@ do
   mv ${file/.fastq/largedel_output_cluster.svg} ${file/merged.fastq/longamp}/output/${file/.fastq/largedel_output_cluster.svg}
   mv ${filename/.sam/_hit_binned.txt} ${file/merged.fastq/longamp}/output
   
-  mv *${file/merged.fastq/}* ${file/merged.fastq/longamp}/processing 2>/dev/null
+  prefix="${file/_merged.fastq/}"
+  if [[ -n "$prefix" ]]; then
+    mv *"${prefix}"* ${file/merged.fastq/longamp}/processing 2>/dev/null
+  fi
   mv log.txt ${file/merged.fastq/longamp}/output/${file/.fastq/_log.txt}
   mv flash.log ${file/merged.fastq/longamp}/output
 
